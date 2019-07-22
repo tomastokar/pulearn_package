@@ -1,6 +1,6 @@
 import numpy as np 
 
-def bagging(mod, X, Y, n = 100, r = 0.1):
+def bagging(mod, X, Y, iters = 100, r = 0.1):
     '''
     Function performs PU bagging
     '''
@@ -12,18 +12,25 @@ def bagging(mod, X, Y, n = 100, r = 0.1):
             u.append(i)
 
     k = np.int(len(u) * r)
-    proba = np.array([])
 
-    for i in range(n):
+    proba = (
+        np
+        .array([])
+        .reshape((0, len(X)))
+    )
+
+    for i in range(iters):
         u_perm = list(np.random.permutation(u))
-        train_idx = u_perm[:k] + p
-        mod.fit(X[train_idx], Y[train_idx])
-        proba.append(mod.predict_prova(X)[:,1])
+        idx = u_perm[:k] + p
+        probs = (
+            mod
+            .fit(X[idx], Y[idx])
+            .predict_proba(X)[:,1]
+        )
+        proba = np.vstack((proba, probs))
 
-    proba = proba.mean(axis = 1)
+    proba = proba.mean(axis = 0)
 
     return(proba)
-
-
 
 

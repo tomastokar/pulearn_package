@@ -1,19 +1,20 @@
+import numpy as np
 from sklearn import datasets, svm
 from pulearn.pu import bagging
 
-import numpy as np
 
-iris = datasets.load_iris()
-p_num = 20
-X = iris.data[:,:2]
-Y = [1] * p_num  + [0] * (len(X) - p_num)
+def test_pu_bagging():
+    '''
+    Function will test pu bagging
+    '''
+    p_num = 20
+    iris = datasets.load_iris()
+    X = iris.data[:,:2]
+    Y = np.array([1] * p_num  + [0] * (len(X) - p_num))
+    mod = svm.SVC(gamma='scale', probability=True)
+    pu_proba = bagging(mod, X, Y, iters = 1000, r = .2)
+    assert type(pu_proba) == np.ndarray
+    assert len(pu_proba) == len(X)
+    assert np.min(pu_proba) < 1.
+    assert np.max(pu_proba) > 0.
 
-p, u = [], []
-for i, y in enumerate(Y):
-    if y == 1:
-        p.append(i)
-    else:
-        u.append(i)
-
-r = 0.1
-k = np.int(len(u) * r)
