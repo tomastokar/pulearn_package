@@ -45,7 +45,7 @@ def induction(mod, X, Y, rel_neg = [], iters = 100):
         else:
             u.append(i)
 
-    n = rel_neg
+    n = list(rel_neg)
     for i in range(iters):
         proba = (
             mod
