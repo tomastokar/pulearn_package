@@ -24,3 +24,5 @@ pip install .
 ```python
 import pulearn.pu as pu
 ```
+
+### Example
